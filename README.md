@@ -3,11 +3,18 @@
 ## Table of Contents
 1. [Objective](#objective)
 2. [Architecture](#architecture)
-    1. [High level architecture](#high-level-architecture)
-    2. [Technologies used](#technologies-used)
-    3. [Backend Services](#backend-services)
-    4. [Frontend Service](#frontend-service)
-    5. [Infrastructure Services](#infrastructure-services)
+    * [High level architecture](#high-level-architecture)
+    * [Technologies used](#technologies-used)
+    * [Backend Services](#backend-services)
+    * [Frontend Service](#frontend-service)
+    * [Infrastructure Services](#infrastructure-services)
+3. [Services Architecture](#services-architecture)
+    * [Frontend Service](#frontend-service)
+    * [Products Service](#products-service)
+    * [Orders Service](#orders-service)
+    * [Warehouse Service](#warehouse-service)
+    * [Delivery Service](#delivery-service)
+    * [Payment Service](#payment-service)
 
 ## Objective:
 BigSmokes Cigar is a leader in elite premium cigars that are sold around the globe. Headquartered in Florida, USA, they have been using an on-prem solution for their ecommerce website. This website is their primary source of orders and is backed by microservices. During cyclone Nirma, they discovered how vulnerable their data center is. The data center was wiped out due to the floods and BigSmokes went offline and hence no revenue generated for 2 weeks. This loss is perceived to be a tiny fraction of what BigSmokes will have to spend on Cloud Migration. They have chosen AWS as their cloud partner and are looking for a proposal from Cognizant to migrate their On-prem site to the cloud. The solution must be best-in-class, but at the same time convince the “very cost conservative” CFO who has to approve the finance. The decisive factors of a winning architecture will be
@@ -73,3 +80,36 @@ __Monitoring__:
 | platform | Core platform resources for deploying backend services. |
 | monitor & log | Log service metrics for future diagnostics. |
 | management & governance | IAM Roles for maintenance, management, governance and configuration of the architecture |
+
+## Services Architecture
+
+### Frontend Service
+
+![Frontend Service Architecture](./frontend.png)
+
+### Products Service
+
+![Products Service Architecture](./products.png)
+
+### Orders Service
+The __orders__ service acts a the single source of truth for data related to an order: delivery address, products, user, etc.
+
+As orders are (somewhat) immutables, information about the delivery address and products are replicated within the order to ensure consistency over time. In some cases (e.g. if a product cannot be packaged, is substituted to another item, etc.), the order might be modified. This service also monitors the change in state from other services (mainly delivery and warehouse) so that users can probe the status of their order.
+
+When a user creates an order, this service also acts as a central gate that contacts other services to verify that the user input is valid. For example, this checks that the products exist and that the prices are correct. If any check fails, this will return an error to the end-user.
+
+![Orders Service Architecture](./orders.png)
+
+### Warehouse Service
+The __warehouse__ service handles packaging incoming orders into packages ready for delivery.
+
+![Warehouse Service Architecture](./warehouse.png)
+
+### Delivery Service
+
+![Delivery Service Architecture](./delivery.png)
+
+### Payment Service
+
+![Payment Service Architecture](./payment.png)
+
