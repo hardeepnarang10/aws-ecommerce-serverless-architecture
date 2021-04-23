@@ -26,7 +26,7 @@ BigSmokes Cigar is a leader in elite premium cigars that are sold around the glo
 - __Value additions__: Innovation that would buy a better bang for the bucks shelled out by BigSmokes.
 
 ## Architecture:
-### High-level architecture
+### High-level services overview
 This is a high-level view of how the different microservices interact with each other. Each service diagram illustrates individual service stack along with endpoints meant to interact with other services.
 
 ![Architecture Diagram](./architecture.png)
